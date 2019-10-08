@@ -97,7 +97,7 @@ function flushWork(didTimeout) {
 
 function flushFirstCallback() {
     var callback = firstCallbackNode.callback;
-    callback();
+    callback(); // callback is performAsyncWork
 }
 
 function requestHostCallback(callback, absoluteTimeout/* ?? */) {

@@ -242,9 +242,7 @@ function reconcileSingleElement(returnFiber, currentFirstChild, element, expirat
                 deleteRemainingChildren(returnFiber, child.sibling);    // 把之前该节点存在的兄弟节点都删除掉
                 const existing = useFiber(
                   child,
-                  element.type === REACT_FRAGMENT_TYPE
-                    ? element.props.children
-                    : element.props,
+                  element.props,
                   expirationTime,
                 );
                 return existing;
