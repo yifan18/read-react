@@ -18,13 +18,7 @@ function performWork(minExpirationTime, isYieldy) {
       );
     }
   } else {
-    while (
-      nextFlushedRoot !== null &&
-      nextFlushedExpirationTime !== NoWork &&
-      minExpirationTime <= nextFlushedExpirationTime
-    ) {
-      performWorkOnRoot(nextFlushedRoot, nextFlushedExpirationTime, false);
-    }
+    // sync
   }
   // If there's work left over, schedule a new callback.
   if (nextFlushedExpirationTime !== NoWork) {
@@ -160,13 +154,13 @@ function commitRoot(root, finishedWork) {
 }
 
 function commitBeforeMutationLifecycles() {
-    while (nextEffect !== null) {
-      const effectTag = nextEffect.effectTag;
-      if (effectTag & Snapshot) {
-        const current = nextEffect.alternate;
-        commitBeforeMutationLifeCycles(current, nextEffect);
-      }
-  
-      nextEffect = nextEffect.nextEffect;
+  while (nextEffect !== null) {
+    const effectTag = nextEffect.effectTag;
+    if (effectTag & Snapshot) {
+      const current = nextEffect.alternate;
+      commitBeforeMutationLifeCycles(current, nextEffect);
     }
+
+    nextEffect = nextEffect.nextEffect;
   }
+}
