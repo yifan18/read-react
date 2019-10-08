@@ -199,10 +199,10 @@ function processUpdateQueue(workInProgress, queue, props, instance, renderExpira
 }
 
 function reconcileChildren(current, workInProgress, nextChildren, renderExpirationTime){
-    if(current){
+    if(current === null){
         workInProgress.child = mountChildFibers(workInProgress, null, nextChildren, renderExpirationTime);
     }else{
-        workInProgress.child = reconcileChildFibers(workInProgress, current$$1.child, nextChildren, renderExpirationTime);
+        workInProgress.child = reconcileChildFibers(workInProgress, current.child, nextChildren, renderExpirationTime);
     }
 }
 
@@ -239,12 +239,20 @@ function reconcileSingleElement(returnFiber, currentFirstChild, element, expirat
     while (child !== null) {
         if(child.key === key){
             if(child.elementType === element.type){
-
+                deleteRemainingChildren(returnFiber, child.sibling);    // 把之前该节点存在的兄弟节点都删除掉
+                const existing = useFiber(
+                  child,
+                  element.type === REACT_FRAGMENT_TYPE
+                    ? element.props.children
+                    : element.props,
+                  expirationTime,
+                );
+                return existing;
             }else{
                 deleteRemainingChildren(returnFiber, child);
             }
         }else{
-            deleteChild(returnFiber, child);
+            deleteChild(returnFiber, child);    // 将child作为delete effect挂到returnFiber的lastEffect上
         }
     }
 
